@@ -19,7 +19,7 @@ import java.util.Objects;
  */
 public class ActorDTO {
 
-    @Schema(name = "ActorInfo")
+    // @Schema(name = "ActorInfo")
     private int id;
     private String name;
     private String about;
@@ -32,9 +32,9 @@ public class ActorDTO {
         this.name = actor.getName();
         this.about = actor.getAbout();
 
-            for (Movie movie : actor.getMovies()) {
-                this.movies.add(new MovieDTO(movie));
-            }
+        for (Movie movie : actor.getMovies()) {
+            this.movies.add(new MovieDTO(movie));
+        }
     }
 
     public ActorDTO() {

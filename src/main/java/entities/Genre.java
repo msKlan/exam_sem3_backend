@@ -30,7 +30,6 @@ public class Genre implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private String description;
     @ManyToMany(mappedBy = "genres",
                 cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Movie> movies = new ArrayList<>();

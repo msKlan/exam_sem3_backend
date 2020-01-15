@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -96,6 +97,7 @@ public class DirectorResource {
     @POST
     @Path("add")
     @Produces({ MediaType.APPLICATION_JSON })
+    @RolesAllowed({ "useradmin", "admin" })
     public DirectorDTO addHobby(String director) {
         Director d = GSON.fromJson(director, Director.class);
         DirectorDTO directorDTO = new DirectorDTO(d);
@@ -111,6 +113,7 @@ public class DirectorResource {
     @Path("edit")
     @Produces({ MediaType.APPLICATION_JSON })
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "useradmin", "admin" })
     public DirectorDTO editDirector(String director) {
         Director d = GSON.fromJson(director, Director.class);
         DirectorDTO directorDTO = new DirectorDTO(d);
@@ -126,6 +129,7 @@ public class DirectorResource {
     @Path("delete/{id}")
     @Produces({ MediaType.APPLICATION_JSON })
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "useradmin", "admin" })
     public DirectorDTO removeHobby(@PathParam("id") int id) {
         return FACADE.removeDirector(id);
     }

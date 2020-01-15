@@ -10,7 +10,7 @@ import java.util.List;
  * @author Klan
  */
 public class GenresDTO {
-    @Schema(example="[\"3\",\"Comedy\"]")
+    @Schema(example="[\"Comedy\"]")
     List<GenreDTO> all = new ArrayList<>();
     
     public GenresDTO(List<Genre> genreEntities) {

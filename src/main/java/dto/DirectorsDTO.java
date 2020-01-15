@@ -15,7 +15,7 @@ import java.util.List;
  * @author Klan
  */
 public class DirectorsDTO {
-    @Schema(example="[\"1\",\"Id\",\"Collection\"]")
+    // @Schema(example="[\"1\",\"Id\",\"Collection\"]")
 
     List<DirectorDTO> all = new ArrayList<>();
 
@@ -32,7 +32,5 @@ public class DirectorsDTO {
     public void setAll(List<DirectorDTO> all) {
         this.all = all;
     }
-    
-    
 
 }

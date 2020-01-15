@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -41,91 +42,94 @@ import utils.EMF_Creator;
  */
 
 @OpenAPIDefinition(info = @Info(title = "Simple genre API", version = "0.4", description = "Simple API to get info about Genres.", contact = @Contact(name = "Michael Sander Klan", email = "michaelsanderklan@gmail.com")), tags = {
-        @Tag(name = "Genre", description = "API related to genres")
+                @Tag(name = "Genre", description = "API related to genres")
 
 }, servers = { @Server(description = "For Local host testing", url = "http://localhost:8080/exam_sem3/"),
-        @Server(description = "Server API", url = "https://aieou.dk/exam_sem3/")
+                @Server(description = "Server API", url = "https://aieou.dk/exam_sem3/")
 
 })
 
 @Path("genre")
 public class GenreResource {
-    private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV,
-            EMF_Creator.Strategy.CREATE);
-    private static final GenreFacade FACADE = GenreFacade.getGenreFacade(EMF);
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+        private static final EntityManagerFactory EMF = EMF_Creator
+                        .createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
+        private static final GenreFacade FACADE = GenreFacade.getGenreFacade(EMF);
+        private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    @Operation(summary = "Shows Hello World - Genre", tags = { "Genre" }, responses = {
-            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))),
-            @ApiResponse(responseCode = "200", description = "The rest interface is running genre"),
-            @ApiResponse(responseCode = "400", description = "The rest interface is probably not running") })
-    @GET
-    @Produces({ MediaType.APPLICATION_JSON })
-    public String demo() {
-        return "{\"msg\":\"Hello World\"}";
-    }
+        @Operation(summary = "Shows Hello World - Genre", tags = { "Genre" }, responses = {
+                        @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))),
+                        @ApiResponse(responseCode = "200", description = "The rest interface is running genre"),
+                        @ApiResponse(responseCode = "400", description = "The rest interface is probably not running") })
+        @GET
+        @Produces({ MediaType.APPLICATION_JSON })
+        public String demo() {
+                return "{\"msg\":\"Hello World\"}";
+        }
 
-    @Operation(summary = "Get Genre by ID", tags = { "Genre" }, responses = {
-            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))),
-            @ApiResponse(responseCode = "200", description = "The requested Genre"),
-            @ApiResponse(responseCode = "400", description = "Genre not found") })
-    @GET
-    @Path("id/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public GenreDTO getGenreByID(@PathParam("id") int id) {
-        GenreDTO genre = FACADE.getGenre(id);
-        return genre;
-    }
+        @Operation(summary = "Get Genre by ID", tags = { "Genre" }, responses = {
+                        @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))),
+                        @ApiResponse(responseCode = "200", description = "The requested Genre"),
+                        @ApiResponse(responseCode = "400", description = "Genre not found") })
+        @GET
+        @Path("id/{id}")
+        @Produces(MediaType.APPLICATION_JSON)
+        public GenreDTO getGenreByID(@PathParam("id") int id) {
+                GenreDTO genre = FACADE.getGenre(id);
+                return genre;
+        }
 
-    @Operation(summary = "Get All Genres", tags = { "Genre" }, responses = {
-            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenresDTO.class))),
-            @ApiResponse(responseCode = "200", description = "The requested Genre"),
-            @ApiResponse(responseCode = "400", description = "Genre not found") })
-    @GET
-    @Path("all")
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<GenreDTO> getAllGenres() {
-        return FACADE.getAllGenres().getAll();
-    }
+        @Operation(summary = "Get All Genres", tags = { "Genre" }, responses = {
+                        @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenresDTO.class))),
+                        @ApiResponse(responseCode = "200", description = "The requested Genre"),
+                        @ApiResponse(responseCode = "400", description = "Genre not found") })
+        @GET
+        @Path("all")
+        @Produces({ MediaType.APPLICATION_JSON })
+        public List<GenreDTO> getAllGenres() {
+                return FACADE.getAllGenres().getAll();
+        }
 
-//    @Operation(summary = "Add a Genre", tags = { "Genre" }, responses = {
-//            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))),
-//            @ApiResponse(responseCode = "200", description = "The added Genre"),
-//            @ApiResponse(responseCode = "400", description = "Invalid input") })
-//    @POST
-//    @Path("add")
-//    @Produces({ MediaType.APPLICATION_JSON })
-//    public GenreDTO addGenre(String genre) {
-//        Genre g = GSON.fromJson(genre, Genre.class);
-//        GenreDTO genreDTO = new GenreDTO(g);
-//        FACADE.addGenre(genreDTO);
-//        return genreDTO;
-//    }
-//
-//    @Operation(summary = "Edit a Genre", tags = { "Genre" }, responses = {
-//            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))),
-//            @ApiResponse(responseCode = "200", description = "The edited Genre"),
-//            @ApiResponse(responseCode = "400", description = "Genre not found") })
-//    @PUT
-//    @Path("edit")
-//    @Produces({ MediaType.APPLICATION_JSON })
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public GenreDTO editHobby(String genre) {
-//        Genre g = GSON.fromJson(genre, Genre.class);
-//        GenreDTO genreDTO = new GenreDTO(g);
-//        FACADE.editGenre(genreDTO);
-//        return genreDTO;
-//    }
-//
-//    @Operation(summary = "Remove/Delete a Genre", tags = { "Genre" }, responses = {
-//            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))),
-//            @ApiResponse(responseCode = "200", description = "The Removed Genre"),
-//            @ApiResponse(responseCode = "400", description = "Genre not found") })
-//    @DELETE
-//    @Path("delete/{id}")
-//    @Produces({ MediaType.APPLICATION_JSON })
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public GenreDTO removeGenre(@PathParam("id") int id) {
-//        return FACADE.removeGenre(id);
-//    }
+        @Operation(summary = "Add a Genre", tags = { "Genre" }, responses = {
+                        @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))),
+                        @ApiResponse(responseCode = "200", description = "The added Genre"),
+                        @ApiResponse(responseCode = "400", description = "Invalid input") })
+        @POST
+        @Path("add")
+        @Produces({ MediaType.APPLICATION_JSON })
+        @RolesAllowed({ "useradmin", "admin" })
+        public GenreDTO addGenre(String genre) {
+                Genre g = GSON.fromJson(genre, Genre.class);
+                GenreDTO genreDTO = new GenreDTO(g);
+                FACADE.addGenre(genreDTO);
+                return genreDTO;
+        }
+
+        @Operation(summary = "Edit a Genre", tags = { "Genre" }, responses = {
+                        @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))),
+                        @ApiResponse(responseCode = "200", description = "The edited Genre"),
+                        @ApiResponse(responseCode = "400", description = "Genre not found") })
+        @PUT
+        @Path("edit")
+        @Produces({ MediaType.APPLICATION_JSON })
+        @Consumes(MediaType.APPLICATION_JSON)
+        @RolesAllowed({ "useradmin", "admin" })
+        public GenreDTO editHobby(String genre) {
+                Genre g = GSON.fromJson(genre, Genre.class);
+                GenreDTO genreDTO = new GenreDTO(g);
+                FACADE.editGenre(genreDTO);
+                return genreDTO;
+        }
+
+        @Operation(summary = "Remove/Delete a Genre", tags = { "Genre" }, responses = {
+                        @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenreDTO.class))),
+                        @ApiResponse(responseCode = "200", description = "The Removed Genre"),
+                        @ApiResponse(responseCode = "400", description = "Genre not found") })
+        @DELETE
+        @Path("delete/{id}")
+        @Produces({ MediaType.APPLICATION_JSON })
+        @Consumes(MediaType.APPLICATION_JSON)
+        @RolesAllowed({ "useradmin", "admin" })
+        public GenreDTO removeGenre(@PathParam("id") int id) {
+                return FACADE.removeGenre(id);
+        }
 }

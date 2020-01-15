@@ -18,7 +18,6 @@ import java.util.Objects;
  */
 public class DirectorDTO {
 
-    @Schema(name = "DirectorInfo")
     private int id;
     private String name;
     private String about;
@@ -31,9 +30,9 @@ public class DirectorDTO {
         this.name = director.getName();
         this.about = director.getAbout();
 
-            for (Movie movie : director.getMovies()) {
-                this.movies.add(new MovieDTO(movie));
-            }
+        for (Movie movie : director.getMovies()) {
+            this.movies.add(new MovieDTO(movie));
+        }
     }
 
     public DirectorDTO() {

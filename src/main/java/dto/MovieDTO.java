@@ -19,7 +19,7 @@ import java.util.Objects;
  *
  * @author Klan
  */
-@Schema(name = "MovieInfo")
+// @Schema(name = "MovieInfo")
 
 public class MovieDTO {
 
