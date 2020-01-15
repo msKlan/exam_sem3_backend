@@ -4,10 +4,12 @@ import dto.MovieDTO;
 import dto.MoviesDTO;
 import entities.Director;
 import entities.Movie;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.ws.rs.WebApplicationException;
 
 /**
  *
@@ -41,9 +43,12 @@ public class MovieFacade {
 
     public MovieDTO getMovie(int id) {
         EntityManager em = emf.createEntityManager();
-        Movie Movie = em.find(Movie.class, id);
+        Movie movie = em.find(Movie.class, id);
+        if (movie == null) {
+            throw new WebApplicationException("Movie not in database", 404);
+        }
         try {
-            return new MovieDTO(Movie);
+            return new MovieDTO(movie);
         } finally {
             em.close();
         }
@@ -102,4 +107,23 @@ public class MovieFacade {
         return new MovieDTO(movie);
     }
 
+    
+    public List<Movie> getMoviesByGenreName(String genreName) {
+        EntityManager em = getEntityManager();
+        try {
+            List<Movie> movies = em.createNamedQuery("Movie.getMoviesByGenre").setParameter("name", genreName).getResultList();
+            if (movies.isEmpty()) {
+                throw new WebApplicationException("No movies with genre in database", 404);
+            }
+//            List<Movie> result = new ArrayList<>();
+//            movies.forEach((movie) -> {
+//                result.add(new Movie(movie));
+//            });
+            return movies;
+        } catch (Exception ex) {
+            throw new WebApplicationException(ex.getMessage(), 404);
+        } finally {
+            em.close();
+        }
+    }
 }

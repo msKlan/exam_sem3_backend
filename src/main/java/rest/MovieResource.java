@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
@@ -144,32 +145,75 @@ public class MovieResource {
         return FACADE.getMovie(id);
     }
 
-    // @POST
-    // @Path("/add")
-    // @Produces(MediaType.APPLICATION_JSON)
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // public MovieDTO addPerson(String person) {
-    // Movie p = GSON.fromJson(person, Movie.class);
-    // MovieDTO pDTO = new MovieDTO(p);
-    // return FACADE.addPerson(pDTO);
-    // }
-    //
-    // @PUT
-    // @Path("/edit")
-    // @Produces(MediaType.APPLICATION_JSON)
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // public MovieDTO editPerson(String person) {
-    // Movie p = GSON.fromJson(person, Movie.class);
-    // MovieDTO pDTO = new MovieDTO(p);
-    // return FACADE.editPerson(pDTO);
-    // }
-    //
-    // @DELETE
-    // @Path("/delete/{id}")
-    // @Produces(MediaType.APPLICATION_JSON)
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // public MovieDTO deletePerson(@PathParam("id") int id) {
-    // return FACADE.deletePerson(id);
-    // }
-
+    
+    @Operation(summary = "Get Movie by Genre Name", tags = { "Movie" }, responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = MovieDTO.class))),
+            @ApiResponse(responseCode = "200", description = "The requested Movies by GenreId"),
+            @ApiResponse(responseCode = "400", description = "Movies not found") })
+    @GET
+    @Path("genre/name/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<MovieDTO> getMoviesByGenreName(@PathParam("name") String genreName) {
+        List<Movie> movieEntities = FACADE.getMoviesByGenreName(genreName);
+        List<MovieDTO> list = new ArrayList();
+        for (Movie movieEntity : movieEntities) {
+            list.add(new MovieDTO(movieEntity));
+        }
+        return list;
+//        return FACADE.getMoviesByGenreName(genreName);
+    }
+    
+    
+    @Operation(summary = "Add a Movie",
+       tags = {"Movie"},
+       responses = {
+                @ApiResponse(
+                content = @Content(mediaType = "application/json",schema = @Schema(implementation = MovieDTO.class))),
+               @ApiResponse(responseCode = "200", description = "The added Movie"),                       
+               @ApiResponse(responseCode = "400", description = "Invalid input")})    @POST
+    @Path("add")
+    @Produces({MediaType.APPLICATION_JSON})
+    @RolesAllowed({"useradmin", "admin"})
+    public MovieDTO addMovie(String movie) {
+        Movie h = GSON.fromJson(movie, Movie.class);
+        MovieDTO movieDTO = new MovieDTO(h);
+        FACADE.addMovie(movieDTO);
+        return movieDTO;
+    }
+    
+    @Operation(summary = "Edit a Movie",
+       tags = {"Movie"},
+       responses = {
+                @ApiResponse(
+                content = @Content(mediaType = "application/json",schema = @Schema(implementation = MovieDTO.class))),
+               @ApiResponse(responseCode = "200", description = "The edited Movie"),                       
+               @ApiResponse(responseCode = "400", description = "Movie not found")})
+    @PUT
+    @Path("edit")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"useradmin", "admin"})
+    public MovieDTO editMovie(String movie) {
+        Movie h = GSON.fromJson(movie, Movie.class);
+        MovieDTO movieDTO = new MovieDTO(h);
+        FACADE.editMovie(movieDTO);
+        return movieDTO;
+    }
+    
+    @Operation(summary = "Remove/Delete a Movie",
+       tags = {"Movie"},
+       responses = {
+                @ApiResponse(
+                content = @Content(mediaType = "application/json",schema = @Schema(implementation = MovieDTO.class))),
+               @ApiResponse(responseCode = "200", description = "The Removed Movie"),                       
+               @ApiResponse(responseCode = "400", description = "Movie not found")})
+    @DELETE
+    @Path("delete/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"useradmin", "admin"})
+    public MovieDTO removeMovie(@PathParam("id") int id) {
+        return FACADE.deleteMovie(id);
+    }    
+    
 }

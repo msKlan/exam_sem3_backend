@@ -13,11 +13,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
-@NamedQuery(name = "Movie.deleteAllRows", query = "DELETE from Movie")
+@NamedQueries({
+@NamedQuery(name = "Movie.deleteAllRows", query = "DELETE from Movie"),
+@NamedQuery(name = "Movie.getMoviesByGenre", query = "SELECT m FROM Movie m JOIN m.genres g WHERE g.name = :name")})
+
 public class Movie implements Serializable {
 
     private static final long serialVersionUID = 1L;

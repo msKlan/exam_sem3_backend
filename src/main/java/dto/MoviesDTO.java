@@ -30,5 +30,10 @@ public class MoviesDTO {
     public void setAll(List<MovieDTO> all) {
         this.all = all;
     }
+
+//    public List<MovieDTO> getMovieByGenreId(Integer id) {
+//        return all;
+//    }
+
     
 }
